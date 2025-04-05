@@ -1,8 +1,7 @@
 import '@src/NewTab.css';
-import '@src/NewTab.scss';
 import { useStorage, withErrorBoundary, withSuspense } from '@extension/shared';
 import { exampleThemeStorage } from '@extension/storage';
-import { ToggleButton } from '@extension/ui';
+import { Button } from '@extension/ui/components/button';
 import { t } from '@extension/i18n';
 
 const NewTab = () => {
@@ -14,17 +13,25 @@ const NewTab = () => {
 
   console.log(t('hello', 'World'));
   return (
-    <div className={`App ${isLight ? 'bg-slate-50' : 'bg-gray-800'}`}>
-      <header className={`App-header ${isLight ? 'text-gray-900' : 'text-gray-100'}`}>
-        <button onClick={goGithubSite}>
-          <img src={chrome.runtime.getURL(logo)} className="App-logo" alt="logo" />
-        </button>
-        <p>
-          Edit <code>pages/new-tab/src/NewTab.tsx</code>
-        </p>
-        <h6>The color of this paragraph is defined using SASS.</h6>
-        <ToggleButton onClick={exampleThemeStorage.toggle}>{t('toggleTheme')}</ToggleButton>
-      </header>
+    <div className={`min-h-screen ${isLight ? 'bg-background' : 'dark bg-background'}`}>
+      <div className="container mx-auto py-8">
+        <header className="flex flex-col items-center space-y-4">
+          <button onClick={goGithubSite} className="hover:opacity-80 transition-opacity">
+            <img src={chrome.runtime.getURL(logo)} className="h-32" alt="logo" />
+          </button>
+          <p className="text-foreground">
+            Edit <code className="bg-muted px-2 py-1 rounded">pages/new-tab/src/NewTab.tsx</code>
+          </p>
+          <div className="flex flex-col items-center gap-4">
+            <Button onClick={exampleThemeStorage.toggle} variant="outline">
+              {t('toggleTheme')}
+            </Button>
+            <Button variant="default" onClick={goGithubSite}>
+              Visit GitHub
+            </Button>
+          </div>
+        </header>
+      </div>
     </div>
   );
 };

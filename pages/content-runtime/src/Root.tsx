@@ -1,6 +1,7 @@
 import { createRoot } from 'react-dom/client';
 import App from '@src/App';
 import injectedStyle from '@src/index.css?inline';
+import sharedStyle from '@extension/ui/src/styles/globals.css?inline';
 
 export function mount() {
   const root = document.createElement('div');
@@ -13,6 +14,9 @@ export function mount() {
 
   const shadowRoot = root.attachShadow({ mode: 'open' });
 
+  // 모든 스타일을 하나의 문자열로 결합
+  const combinedStyles = `${sharedStyle}\n${injectedStyle}`;
+
   if (navigator.userAgent.includes('Firefox')) {
     /**
      * In the firefox environment, adoptedStyleSheets cannot be used due to the bug
@@ -21,12 +25,12 @@ export function mount() {
      * Injecting styles into the document, this may cause style conflicts with the host page
      */
     const styleElement = document.createElement('style');
-    styleElement.innerHTML = injectedStyle;
+    styleElement.innerHTML = combinedStyles;
     shadowRoot.appendChild(styleElement);
   } else {
     /** Inject styles into shadow dom */
     const globalStyleSheet = new CSSStyleSheet();
-    globalStyleSheet.replaceSync(injectedStyle);
+    globalStyleSheet.replaceSync(combinedStyles);
     shadowRoot.adoptedStyleSheets = [globalStyleSheet];
   }
 
